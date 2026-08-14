@@ -1,0 +1,11 @@
+{
+    "name": "Lifeline - Emergency & Health",
+    "short_name": "Lifeline",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0C0E12",
+    "theme_color": "#E53935",
+    "description": "Aplikasi layanan darurat kesehatan dan Medical ID.",
+    "orientation": "portrait",
+    "prefer_related_applications": false
+}

@@ -1,2 +1,12 @@
 .DS_Store
 *.log
+flutter/
+build/
+.dart_tool/
+.idea/
+.metadata
+*.iml
+.pub-cache/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies

@@ -1,0 +1,115 @@
+{
+  "radius-none": {
+    "$type": "number",
+    "$value": 0,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:123",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-xxs-2px": {
+    "$type": "number",
+    "$value": 2,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:124",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-xs-4px": {
+    "$type": "number",
+    "$value": 4,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:125",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-sm-6px": {
+    "$type": "number",
+    "$value": 6,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:126",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-md-8px": {
+    "$type": "number",
+    "$value": 8,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:127",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-lg-10px": {
+    "$type": "number",
+    "$value": 10,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:128",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-xl-12px": {
+    "$type": "number",
+    "$value": 12,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:129",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-2xl-16px": {
+    "$type": "number",
+    "$value": 16,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:130",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-3xl-20px": {
+    "$type": "number",
+    "$value": 20,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:131",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-4xl-24px": {
+    "$type": "number",
+    "$value": 24,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:132",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "radius-ful": {
+    "$type": "number",
+    "$value": 9999,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:2051:133",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ]
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "Style"
+  }
+}
