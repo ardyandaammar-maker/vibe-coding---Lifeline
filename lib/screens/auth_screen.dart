@@ -1,19 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../data/user_store.dart';
 
 enum AuthMode { signIn, register }
-
-class UserAccount {
-  final String name;
-  final String email;
-  final String password;
-
-  UserAccount({
-    required this.name,
-    required this.email,
-    required this.password,
-  });
-}
 
 class AuthScreen extends StatefulWidget {
   final AuthMode initialMode;
@@ -45,20 +34,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   bool _isPasswordVisible = false;
   String? _errorMessage;
-
-  // Saved registered accounts database
-  final List<UserAccount> _registeredAccounts = [
-    UserAccount(
-      name: 'Ammar',
-      email: 'ammar@lifeline.id',
-      password: 'secret123',
-    ),
-    UserAccount(
-      name: 'Rizky Pratama',
-      email: 'rizky@lifeline.id',
-      password: 'secret123',
-    ),
-  ];
 
   @override
   void initState() {
@@ -93,7 +68,7 @@ class _AuthScreenState extends State<AuthScreen> {
       final name = _fullNameController.text.trim();
 
       // Check if email already exists
-      final bool exists = _registeredAccounts.any((acc) => acc.email.toLowerCase() == email);
+      final bool exists = UserStore().isEmailRegistered(email);
       if (exists) {
         setState(() {
           _errorMessage = 'Email ini sudah terdaftar. Silakan langsung masuk.';
@@ -101,14 +76,14 @@ class _AuthScreenState extends State<AuthScreen> {
         return;
       }
 
-      // Add new account
+      // Add new account to central UserStore
       final newAccount = UserAccount(name: name, email: email, password: password);
-      _registeredAccounts.add(newAccount);
+      UserStore().registerAccount(newAccount);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('✅ Pendaftaran berhasil! Silakan masuk dengan email & kata sandi Anda.'),
-          backgroundColor: const Color(0xFF079455),
+          backgroundColor: Color(0xFF079455),
         ),
       );
 
@@ -118,13 +93,10 @@ class _AuthScreenState extends State<AuthScreen> {
         _errorMessage = null;
       });
     } else {
-      // Login validation: must match email AND password
-      final UserAccount? matchedAccount = _registeredAccounts.firstWhere(
-        (acc) => acc.email.toLowerCase() == email && acc.password == password,
-        orElse: () => UserAccount(name: '', email: '', password: ''),
-      );
+      // Login validation: must match email AND password via UserStore
+      final UserAccount? matchedAccount = UserStore().findAccount(email, password);
 
-      if (matchedAccount != null && matchedAccount.email.isNotEmpty) {
+      if (matchedAccount != null) {
         // Success
         widget.onAuthSuccess(matchedAccount.name);
       } else {

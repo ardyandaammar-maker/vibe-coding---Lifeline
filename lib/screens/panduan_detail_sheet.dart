@@ -42,44 +42,24 @@ class PanduanDetailSheet extends StatelessWidget {
           const SizedBox(height: 14),
 
           // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      guide.title,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: tokens.textDisplay,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    const SizedBox(height: LifelineSpacing.xxs),
-                    Text(
-                      guide.description,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: tokens.textTertiary,
-                      ),
-                    ),
-                  ],
+              Text(
+                guide.title,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: tokens.textDisplay,
+                  letterSpacing: -0.3,
                 ),
               ),
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: tokens.bgSecondary,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: Icon(Icons.close, size: 18, color: tokens.textTertiary),
-                  onPressed: () => Navigator.pop(context),
+              const SizedBox(height: LifelineSpacing.xxs),
+              Text(
+                guide.description,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: tokens.textTertiary,
                 ),
               ),
             ],

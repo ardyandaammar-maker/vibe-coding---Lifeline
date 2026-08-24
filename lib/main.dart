@@ -13,7 +13,7 @@ void main() {
 }
 
 class LifelineApp extends StatefulWidget {
-  const LifelineApp({Key? key}) : super(key: key);
+  const LifelineApp({super.key});
 
   @override
   State<LifelineApp> createState() => _LifelineAppState();
@@ -21,7 +21,7 @@ class LifelineApp extends StatefulWidget {
 
 class _LifelineAppState extends State<LifelineApp> {
   ThemeMode _themeMode = ThemeMode.light;
-  String _currentRoute = 'onboarding';
+  String _currentRoute = 'welcome';
   AuthMode _authMode = AuthMode.signIn;
   String _currentUserName = 'Ammar';
 
