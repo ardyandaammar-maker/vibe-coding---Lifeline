@@ -171,13 +171,102 @@ class RiwayatDetailSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: LifelineSpacing.lg16),
 
-                  // Empty Map Box
-                  Container(
-                    width: double.infinity,
-                    height: 180,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE5E7EB),
-                      borderRadius: BorderRadius.circular(LifelineRadius.xl2),
+                  // Interactive Map Preview Box
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(LifelineRadius.xl2),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 180,
+                      child: Stack(
+                        children: [
+                          // Map Background Container
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.map_outlined,
+                                size: 54,
+                                color: tokens.textTertiary.withValues(alpha: 0.2),
+                              ),
+                            ),
+                          ),
+                          // Dark Gradient Overlay
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withValues(alpha: 0.1),
+                                  Colors.black.withValues(alpha: 0.5),
+                                ],
+                              ),
+                            ),
+                          ),
+                          // Location Pin
+                          Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE53935),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Text(
+                                    'Lokasi Kejadian Darurat',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.location_on,
+                                  color: Color(0xFFE53935),
+                                  size: 32,
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Address Bar at Bottom
+                          Positioned(
+                            bottom: 10,
+                            left: 10,
+                            right: 10,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: tokens.bgPrimary.withValues(alpha: 0.95),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: tokens.borderPrimary, width: 1),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.my_location_rounded, color: Color(0xFF2563EB), size: 16),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      incident.location,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: tokens.textPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: LifelineSpacing.lg16),

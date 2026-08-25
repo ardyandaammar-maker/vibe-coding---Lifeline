@@ -271,35 +271,127 @@ class _LayananTerdekatSheetState extends State<LayananTerdekatSheet> {
           ),
           const SizedBox(height: LifelineSpacing.lg16),
 
-          // EMPTY FRAME FOR MAPS (Figma exact empty container frame)
+          // INTERACTIVE MAP FRAME WITH GOOGLE MAPS PREVIEW & ADDRESS
           Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: tokens.bgQuaternary.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: tokens.borderPrimary, width: 1),
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.map_outlined,
-                      size: 32,
-                      color: tokens.textTertiary.withValues(alpha: 0.5),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(22),
+              child: Stack(
+                children: [
+                  // Map Background Container
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
                     ),
-                    const SizedBox(height: LifelineSpacing.sm),
-                    Text(
-                      'Frame Peta (Kosong)',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: tokens.textTertiary.withValues(alpha: 0.6),
+                    child: Icon(
+                      Icons.map_outlined,
+                      size: 64,
+                      color: tokens.textTertiary.withValues(alpha: 0.2),
+                    ),
+                  ),
+                  // Styled Map Overlay Gradient
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.1),
+                          Colors.black.withValues(alpha: 0.5),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  // Pin & Target Location Marker
+                  Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE53935),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFE53935).withValues(alpha: 0.4),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(_selectedFacility.icon, color: Colors.white, size: 14),
+                              const SizedBox(width: 6),
+                              Text(
+                                _selectedFacility.name,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_drop_down_rounded,
+                          color: Color(0xFFE53935),
+                          size: 32,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Address & Details Card at Bottom
+                  Positioned(
+                    bottom: 12,
+                    left: 12,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: tokens.bgPrimary.withValues(alpha: 0.95),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: tokens.borderPrimary, width: 1),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.location_on, color: Color(0xFFE53935), size: 20),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  _selectedFacility.address,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: tokens.textPrimary,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${_selectedFacility.distance} • ${_selectedFacility.duration} • ${_selectedFacility.hours}',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: tokens.textTertiary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
