@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../data/incident_store.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class RiwayatDetailSheet extends StatelessWidget {
   final LifelineColors tokens;
@@ -171,7 +173,7 @@ class RiwayatDetailSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: LifelineSpacing.lg16),
 
-                  // Interactive Map Preview Box
+                  // OPENSTREETMAP LIVE MAP PREVIEW BOX
                   ClipRRect(
                     borderRadius: BorderRadius.circular(LifelineRadius.xl2),
                     child: SizedBox(
@@ -179,59 +181,54 @@ class RiwayatDetailSheet extends StatelessWidget {
                       height: 180,
                       child: Stack(
                         children: [
-                          // Map Background Container
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
+                          FlutterMap(
+                            options: const MapOptions(
+                              initialCenter: LatLng(-6.1754, 106.8272),
+                              initialZoom: 15.0,
                             ),
-                            child: Center(
-                              child: Icon(
-                                Icons.map_outlined,
-                                size: 54,
-                                color: tokens.textTertiary.withValues(alpha: 0.2),
+                            children: [
+                              TileLayer(
+                                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                userAgentPackageName: 'com.example.lifeline',
                               ),
-                            ),
-                          ),
-                          // Dark Gradient Overlay
-                          Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.black.withValues(alpha: 0.1),
-                                  Colors.black.withValues(alpha: 0.5),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Location Pin
-                          Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE53935),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: const Text(
-                                    'Lokasi Kejadian Darurat',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w700,
+                              MarkerLayer(
+                                markers: [
+                                  Marker(
+                                    point: const LatLng(-6.1754, 106.8272),
+                                    width: 170,
+                                    height: 60,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFE53935),
+                                            borderRadius: BorderRadius.circular(10),
+                                            boxShadow: const [
+                                              BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+                                            ],
+                                          ),
+                                          child: const Text(
+                                            'Lokasi Kejadian Darurat',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.location_on,
+                                          color: Color(0xFFE53935),
+                                          size: 28,
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                const Icon(
-                                  Icons.location_on,
-                                  color: Color(0xFFE53935),
-                                  size: 32,
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                            ],
                           ),
                           // Address Bar at Bottom
                           Positioned(
