@@ -141,33 +141,69 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Widget _buildGoogleLogo() {
-    return Container(
+    return Image.network(
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png',
       width: 22,
       height: 22,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: Text(
-          'G',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w900,
-            foreground: Paint()
-              ..shader = const LinearGradient(
-                colors: [
-                  Color(0xFF4285F4),
-                  Color(0xFFEA4335),
-                  Color(0xFFFBBC05),
-                  Color(0xFF34A853),
-                ],
-              ).createShader(const Rect.fromLTWH(0, 0, 20, 20)),
-          ),
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) => const SizedBox(
+        width: 22,
+        height: 22,
+        child: CustomPaint(
+          painter: _GoogleLogoPainter(),
         ),
       ),
     );
   }
+
+class _GoogleLogoPainter extends CustomPainter {
+  const _GoogleLogoPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double w = size.width;
+    final double h = size.height;
+    final double cx = w / 2;
+    final double cy = h / 2;
+    final double radius = w * 0.45;
+    final double strokeWidth = w * 0.22;
+
+    final rect = Rect.fromCircle(center: Offset(cx, cy), radius: radius - strokeWidth / 2);
+
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.butt;
+
+    // Red (Top)
+    paint.color = const Color(0xFFEA4335);
+    canvas.drawArc(rect, -0.85, 2.1, false, paint);
+
+    // Yellow (Bottom Left)
+    paint.color = const Color(0xFFFBBC05);
+    canvas.drawArc(rect, 2.2, 1.25, false, paint);
+
+    // Green (Bottom Right)
+    paint.color = const Color(0xFF34A853);
+    canvas.drawArc(rect, 0.9, 1.4, false, paint);
+
+    // Blue (Right & Bar)
+    paint.color = const Color(0xFF4285F4);
+    canvas.drawArc(rect, -0.35, 1.35, false, paint);
+
+    final barPaint = Paint()
+      ..color = const Color(0xFF4285F4)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRect(
+      Rect.fromLTWH(cx - 1, cy - strokeWidth / 2, radius, strokeWidth),
+      barPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
 
   @override
   Widget build(BuildContext context) {
