@@ -115,6 +115,60 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  void _handleGoogleSignIn() {
+    const googleEmail = 'ammar.google@gmail.com';
+    const googleName = 'Ammar (Google)';
+
+    if (!UserStore().isEmailRegistered(googleEmail)) {
+      UserStore().registerAccount(
+        UserAccount(
+          name: googleName,
+          email: googleEmail,
+          password: 'google_oauth_token',
+        ),
+      );
+      UserStore().completeOnboarding(googleName);
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('✅ Berhasil masuk dengan akun Google!'),
+        backgroundColor: Color(0xFF079455),
+      ),
+    );
+
+    widget.onAuthSuccess(googleName);
+  }
+
+  Widget _buildGoogleLogo() {
+    return Container(
+      width: 22,
+      height: 22,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Text(
+          'G',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w900,
+            foreground: Paint()
+              ..shader = const LinearGradient(
+                colors: [
+                  Color(0xFF4285F4),
+                  Color(0xFFEA4335),
+                  Color(0xFFFBBC05),
+                  Color(0xFF34A853),
+                ],
+              ).createShader(const Rect.fromLTWH(0, 0, 20, 20)),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).extension<LifelineColors>() ?? LifelineColors.light;
@@ -407,6 +461,58 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       const SizedBox(width: LifelineSpacing.md),
                       const Icon(Icons.arrow_forward_rounded, size: 20),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: LifelineSpacing.lg16),
+
+                // Divider
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: tokens.borderPrimary.withValues(alpha: 0.4))),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Text(
+                        'atau',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: tokens.textTertiary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: Divider(color: tokens.borderPrimary.withValues(alpha: 0.4))),
+                  ],
+                ),
+                const SizedBox(height: LifelineSpacing.lg16),
+
+                // Google Sign In Button
+                OutlinedButton(
+                  onPressed: _handleGoogleSignIn,
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: tokens.bgSecondary,
+                    foregroundColor: tokens.textPrimary,
+                    minimumSize: const Size(double.infinity, 54),
+                    side: BorderSide(color: tokens.borderSecondary, width: 1.2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(LifelineRadius.xl2),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildGoogleLogo(),
+                      const SizedBox(width: 12),
+                      Text(
+                        _currentMode == AuthMode.signIn
+                            ? 'Masuk dengan Google'
+                            : 'Daftar dengan Google',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: tokens.textPrimary,
+                        ),
+                      ),
                     ],
                   ),
                 ),
