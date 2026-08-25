@@ -17,9 +17,11 @@ class UserStore {
   static final UserStore _instance = UserStore._internal();
   factory UserStore() => _instance;
 
+  String _key(String userName) => userName.trim().toLowerCase();
+
   UserStore._internal() {
-    _completedOnboarding.add('Ammar');
-    _completedOnboarding.add('Rizky Pratama');
+    completeOnboarding('Ammar');
+    completeOnboarding('Rizky Pratama');
   }
 
   final Map<String, MedicalData> _medicalDataMap = {};
@@ -60,30 +62,34 @@ class UserStore {
   }
 
   bool hasCompletedOnboarding(String userName) {
-    return _completedOnboarding.contains(userName);
+    return _completedOnboarding.contains(_key(userName));
   }
 
   void completeOnboarding(String userName) {
-    _completedOnboarding.add(userName);
+    _completedOnboarding.add(_key(userName));
   }
 
   MedicalData getMedicalData(String userName) {
-    if (!_medicalDataMap.containsKey(userName)) {
-      _medicalDataMap[userName] = hasCompletedOnboarding(userName) 
+    final k = _key(userName);
+    if (!_medicalDataMap.containsKey(k)) {
+      _medicalDataMap[k] = hasCompletedOnboarding(userName) 
           ? MedicalData.initial() 
           : MedicalData.empty();
     }
-    return _medicalDataMap[userName]!;
+    return _medicalDataMap[k]!;
   }
 
   void updateMedicalData(String userName, MedicalData data) {
-    _medicalDataMap[userName] = data;
+    final k = _key(userName);
+    _medicalDataMap[k] = data;
+    _completedOnboarding.add(k);
   }
 
   List<ContactModel> getContacts(String userName) {
-    if (!_contactsMap.containsKey(userName)) {
+    final k = _key(userName);
+    if (!_contactsMap.containsKey(k)) {
       if (hasCompletedOnboarding(userName)) {
-        _contactsMap[userName] = [
+        _contactsMap[k] = [
           ContactModel(
             initials: 'BH',
             name: 'Bapak Hendra',
@@ -111,13 +117,14 @@ class UserStore {
           ),
         ];
       } else {
-        _contactsMap[userName] = [];
+        _contactsMap[k] = [];
       }
     }
-    return _contactsMap[userName]!;
+    return _contactsMap[k]!;
   }
 
   void updateContacts(String userName, List<ContactModel> contacts) {
-    _contactsMap[userName] = contacts;
+    final k = _key(userName);
+    _contactsMap[k] = contacts;
   }
 }
