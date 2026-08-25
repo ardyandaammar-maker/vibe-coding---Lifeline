@@ -52,4 +52,34 @@ class MedicalData {
       donor: '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'age': age,
+      'gender': gender,
+      'bloodType': bloodType,
+      'weight': weight,
+      'height': height,
+      'allergies': allergies,
+      'medications': medications,
+      'conditions': conditions,
+      'donor': donor,
+    };
+  }
+
+  factory MedicalData.fromJson(Map<String, dynamic> json) {
+    return MedicalData(
+      name: json['name'] ?? '',
+      age: json['age'] ?? '',
+      gender: json['gender'] ?? '',
+      bloodType: json['bloodType'] ?? '',
+      weight: json['weight'] ?? '',
+      height: json['height'] ?? '',
+      allergies: json['allergies'] ?? '',
+      medications: json['medications'] ?? '',
+      conditions: json['conditions'] ?? '',
+      donor: json['donor'] ?? '',
+    );
+  }
 }

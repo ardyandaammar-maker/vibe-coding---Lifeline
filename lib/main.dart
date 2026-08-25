@@ -8,7 +8,9 @@ import 'screens/sos_active_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'data/user_store.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserStore().init();
   runApp(const LifelineApp());
 }
 

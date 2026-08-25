@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/medical_data.dart';
 import '../models/contact_model.dart';
 
@@ -11,6 +13,22 @@ class UserAccount {
     required this.email,
     required this.password,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'email': email,
+      'password': password,
+    };
+  }
+
+  factory UserAccount.fromJson(Map<String, dynamic> json) {
+    return UserAccount(
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      password: json['password'] ?? '',
+    );
+  }
 }
 
 class UserStore {
@@ -19,10 +37,7 @@ class UserStore {
 
   String _key(String userName) => userName.trim().toLowerCase();
 
-  UserStore._internal() {
-    completeOnboarding('Ammar');
-    completeOnboarding('Rizky Pratama');
-  }
+  UserStore._internal();
 
   final Map<String, MedicalData> _medicalDataMap = {};
   final Map<String, List<ContactModel>> _contactsMap = {};
@@ -40,10 +55,98 @@ class UserStore {
     ),
   ];
 
+  SharedPreferences? _prefs;
+
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+    _loadFromDisk();
+  }
+
+  void _loadFromDisk() {
+    if (_prefs == null) return;
+
+    // Load registered accounts
+    final String? accountsJson = _prefs!.getString('user_store_registered_accounts');
+    if (accountsJson != null && accountsJson.isNotEmpty) {
+      try {
+        final List<dynamic> decoded = jsonDecode(accountsJson);
+        _registeredAccounts.clear();
+        for (final item in decoded) {
+          _registeredAccounts.add(UserAccount.fromJson(Map<String, dynamic>.from(item)));
+        }
+      } catch (_) {}
+    }
+
+    // Load completed onboarding set
+    final List<String>? onboardingList = _prefs!.getStringList('user_store_completed_onboarding');
+    if (onboardingList != null) {
+      _completedOnboarding.clear();
+      _completedOnboarding.addAll(onboardingList);
+    } else {
+      completeOnboarding('Ammar');
+      completeOnboarding('Rizky Pratama');
+    }
+
+    // Load medical data map
+    final String? medicalJson = _prefs!.getString('user_store_medical_data_map');
+    if (medicalJson != null && medicalJson.isNotEmpty) {
+      try {
+        final Map<String, dynamic> decoded = jsonDecode(medicalJson);
+        _medicalDataMap.clear();
+        decoded.forEach((key, val) {
+          _medicalDataMap[key] = MedicalData.fromJson(Map<String, dynamic>.from(val));
+        });
+      } catch (_) {}
+    }
+
+    // Load contacts map
+    final String? contactsJson = _prefs!.getString('user_store_contacts_map');
+    if (contactsJson != null && contactsJson.isNotEmpty) {
+      try {
+        final Map<String, dynamic> decoded = jsonDecode(contactsJson);
+        _contactsMap.clear();
+        decoded.forEach((key, val) {
+          final List<dynamic> list = val;
+          _contactsMap[key] = list.map((c) => ContactModel.fromJson(Map<String, dynamic>.from(c))).toList();
+        });
+      } catch (_) {}
+    }
+  }
+
+  void _saveAccounts() {
+    if (_prefs == null) return;
+    final String jsonStr = jsonEncode(_registeredAccounts.map((a) => a.toJson()).toList());
+    _prefs!.setString('user_store_registered_accounts', jsonStr);
+  }
+
+  void _saveCompletedOnboarding() {
+    if (_prefs == null) return;
+    _prefs!.setStringList('user_store_completed_onboarding', _completedOnboarding.toList());
+  }
+
+  void _saveMedicalData() {
+    if (_prefs == null) return;
+    final Map<String, dynamic> encodable = {};
+    _medicalDataMap.forEach((k, v) {
+      encodable[k] = v.toJson();
+    });
+    _prefs!.setString('user_store_medical_data_map', jsonEncode(encodable));
+  }
+
+  void _saveContacts() {
+    if (_prefs == null) return;
+    final Map<String, dynamic> encodable = {};
+    _contactsMap.forEach((k, v) {
+      encodable[k] = v.map((c) => c.toJson()).toList();
+    });
+    _prefs!.setString('user_store_contacts_map', jsonEncode(encodable));
+  }
+
   List<UserAccount> get registeredAccounts => _registeredAccounts;
 
   void registerAccount(UserAccount account) {
     _registeredAccounts.add(account);
+    _saveAccounts();
   }
 
   bool isEmailRegistered(String email) {
@@ -67,6 +170,7 @@ class UserStore {
 
   void completeOnboarding(String userName) {
     _completedOnboarding.add(_key(userName));
+    _saveCompletedOnboarding();
   }
 
   MedicalData getMedicalData(String userName) {
@@ -83,6 +187,8 @@ class UserStore {
     final k = _key(userName);
     _medicalDataMap[k] = data;
     _completedOnboarding.add(k);
+    _saveMedicalData();
+    _saveCompletedOnboarding();
   }
 
   List<ContactModel> getContacts(String userName) {
@@ -126,5 +232,6 @@ class UserStore {
   void updateContacts(String userName, List<ContactModel> contacts) {
     final k = _key(userName);
     _contactsMap[k] = contacts;
+    _saveContacts();
   }
 }
