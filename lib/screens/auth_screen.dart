@@ -82,19 +82,24 @@ class _AuthScreenState extends State<AuthScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('✅ Pendaftaran berhasil! Silakan isi data diri Anda.'),
+          content: Text('✅ Pendaftaran berhasil! Silakan klik Masuk dengan email & kata sandi Anda.'),
           backgroundColor: Color(0xFF079455),
         ),
       );
 
-      // Immediately navigate new registered user to OnboardingScreen (Screen Pendataan Diri)
-      widget.onAuthSuccess(name);
+      // Pre-fill email and password into sign-in mode
+      setState(() {
+        _emailController.text = email;
+        _passwordController.text = password;
+        _currentMode = AuthMode.signIn;
+        _errorMessage = null;
+      });
     } else {
       // Login validation: must match email AND password via UserStore
       final UserAccount? matchedAccount = UserStore().findAccount(email, password);
 
       if (matchedAccount != null) {
-        // Success
+        // Success -> Navigates to Data Pribadi (OnboardingScreen) if not yet completed
         widget.onAuthSuccess(matchedAccount.name);
       } else {
         // Failure
@@ -115,26 +120,32 @@ class _AuthScreenState extends State<AuthScreen> {
   void _handleGoogleSignIn() {
     const googleEmail = 'ammar.google@gmail.com';
     const googleName = 'Ammar (Google)';
+    const googlePassword = 'secret123';
 
     if (!UserStore().isEmailRegistered(googleEmail)) {
       UserStore().registerAccount(
         UserAccount(
           name: googleName,
           email: googleEmail,
-          password: 'google_oauth_token',
+          password: googlePassword,
         ),
       );
-      // DO NOT pre-complete onboarding here so new Google accounts fill out Screen Pendataan Diri
     }
+
+    // Pre-fill email and password in sign in mode for Google user
+    setState(() {
+      _emailController.text = googleEmail;
+      _passwordController.text = googlePassword;
+      _currentMode = AuthMode.signIn;
+      _errorMessage = null;
+    });
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('✅ Berhasil masuk dengan akun Google!'),
+        content: Text('✅ Akun Google terhubung! Silakan klik Masuk untuk melanjutkan ke Data Pribadi.'),
         backgroundColor: Color(0xFF079455),
       ),
     );
-
-    widget.onAuthSuccess(googleName);
   }
 
   Widget _buildGoogleLogo() {
