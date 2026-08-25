@@ -82,15 +82,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('✅ Pendaftaran berhasil! Silakan klik Masuk dengan email & kata sandi Anda.'),
+          content: Text('✅ Pendaftaran berhasil! Silakan masuk dengan email & kata sandi Anda.'),
           backgroundColor: Color(0xFF079455),
         ),
       );
 
-      // Pre-fill email and password into sign-in mode
+      // Switch to Sign In mode
       setState(() {
-        _emailController.text = email;
-        _passwordController.text = password;
         _currentMode = AuthMode.signIn;
         _errorMessage = null;
       });
@@ -99,7 +97,7 @@ class _AuthScreenState extends State<AuthScreen> {
       final UserAccount? matchedAccount = UserStore().findAccount(email, password);
 
       if (matchedAccount != null) {
-        // Success -> Navigates to Data Pribadi (OnboardingScreen) if not yet completed
+        // Success
         widget.onAuthSuccess(matchedAccount.name);
       } else {
         // Failure
@@ -115,53 +113,6 @@ class _AuthScreenState extends State<AuthScreen> {
         );
       }
     }
-  }
-
-  void _handleGoogleSignIn() {
-    const googleEmail = 'ammar.google@gmail.com';
-    const googleName = 'Ammar (Google)';
-    const googlePassword = 'secret123';
-
-    if (!UserStore().isEmailRegistered(googleEmail)) {
-      UserStore().registerAccount(
-        UserAccount(
-          name: googleName,
-          email: googleEmail,
-          password: googlePassword,
-        ),
-      );
-    }
-
-    // Pre-fill email and password in sign in mode for Google user
-    setState(() {
-      _emailController.text = googleEmail;
-      _passwordController.text = googlePassword;
-      _currentMode = AuthMode.signIn;
-      _errorMessage = null;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('✅ Akun Google terhubung! Silakan klik Masuk untuk melanjutkan ke Data Pribadi.'),
-        backgroundColor: Color(0xFF079455),
-      ),
-    );
-  }
-
-  Widget _buildGoogleLogo() {
-    return Image.network(
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png',
-      width: 22,
-      height: 22,
-      fit: BoxFit.contain,
-      errorBuilder: (context, error, stackTrace) => const SizedBox(
-        width: 22,
-        height: 22,
-        child: CustomPaint(
-          painter: _GoogleLogoPainter(),
-        ),
-      ),
-    );
   }
 
   @override
@@ -459,58 +410,6 @@ class _AuthScreenState extends State<AuthScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: LifelineSpacing.lg16),
-
-                // Divider
-                Row(
-                  children: [
-                    Expanded(child: Divider(color: tokens.borderPrimary.withValues(alpha: 0.4))),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Text(
-                        'atau',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: tokens.textTertiary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Expanded(child: Divider(color: tokens.borderPrimary.withValues(alpha: 0.4))),
-                  ],
-                ),
-                const SizedBox(height: LifelineSpacing.lg16),
-
-                // Google Sign In Button
-                OutlinedButton(
-                  onPressed: _handleGoogleSignIn,
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: tokens.bgSecondary,
-                    foregroundColor: tokens.textPrimary,
-                    minimumSize: const Size(double.infinity, 54),
-                    side: BorderSide(color: tokens.borderSecondary, width: 1.2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(LifelineRadius.xl2),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildGoogleLogo(),
-                      const SizedBox(width: 12),
-                      Text(
-                        _currentMode == AuthMode.signIn
-                            ? 'Masuk dengan Google'
-                            : 'Daftar dengan Google',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: tokens.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 const SizedBox(height: LifelineSpacing.xl3),
 
                 // Footer Note
@@ -533,53 +432,3 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 }
-
-class _GoogleLogoPainter extends CustomPainter {
-  const _GoogleLogoPainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final double w = size.width;
-    final double h = size.height;
-    final double cx = w / 2;
-    final double cy = h / 2;
-    final double radius = w * 0.45;
-    final double strokeWidth = w * 0.22;
-
-    final rect = Rect.fromCircle(center: Offset(cx, cy), radius: radius - strokeWidth / 2);
-
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.butt;
-
-    // Red (Top)
-    paint.color = const Color(0xFFEA4335);
-    canvas.drawArc(rect, -0.85, 2.1, false, paint);
-
-    // Yellow (Bottom Left)
-    paint.color = const Color(0xFFFBBC05);
-    canvas.drawArc(rect, 2.2, 1.25, false, paint);
-
-    // Green (Bottom Right)
-    paint.color = const Color(0xFF34A853);
-    canvas.drawArc(rect, 0.9, 1.4, false, paint);
-
-    // Blue (Right & Bar)
-    paint.color = const Color(0xFF4285F4);
-    canvas.drawArc(rect, -0.35, 1.35, false, paint);
-
-    final barPaint = Paint()
-      ..color = const Color(0xFF4285F4)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRect(
-      Rect.fromLTWH(cx - 1, cy - strokeWidth / 2, radius, strokeWidth),
-      barPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
