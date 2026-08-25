@@ -82,16 +82,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('✅ Pendaftaran berhasil! Silakan masuk dengan email & kata sandi Anda.'),
+          content: Text('✅ Pendaftaran berhasil! Silakan isi data diri Anda.'),
           backgroundColor: Color(0xFF079455),
         ),
       );
 
-      // Switch to Sign In mode
-      setState(() {
-        _currentMode = AuthMode.signIn;
-        _errorMessage = null;
-      });
+      // Immediately navigate new registered user to OnboardingScreen (Screen Pendataan Diri)
+      widget.onAuthSuccess(name);
     } else {
       // Login validation: must match email AND password via UserStore
       final UserAccount? matchedAccount = UserStore().findAccount(email, password);
@@ -127,7 +124,7 @@ class _AuthScreenState extends State<AuthScreen> {
           password: 'google_oauth_token',
         ),
       );
-      UserStore().completeOnboarding(googleName);
+      // DO NOT pre-complete onboarding here so new Google accounts fill out Screen Pendataan Diri
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
