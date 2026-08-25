@@ -80,13 +80,6 @@ class _AuthScreenState extends State<AuthScreen> {
       final newAccount = UserAccount(name: name, email: email, password: password);
       UserStore().registerAccount(newAccount);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('✅ Pendaftaran berhasil! Silakan masuk dengan email & kata sandi Anda.'),
-          backgroundColor: Color(0xFF079455),
-        ),
-      );
-
       // Switch to Sign In mode
       setState(() {
         _currentMode = AuthMode.signIn;
