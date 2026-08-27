@@ -227,6 +227,8 @@ class WelcomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
   Widget _buildFeatureCard(
     BuildContext context, {
     required LifelineColors tokens,
