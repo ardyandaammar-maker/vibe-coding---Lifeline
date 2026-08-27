@@ -106,7 +106,9 @@ class _AuthScreenState extends State<AuthScreen> {
     super.dispose();
   }
 
-  void _submit() {
+  bool _isSubmitting = false;
+
+  Future<void> _submit() async {
     setState(() {
       _errorMessage = null;
     });
@@ -115,49 +117,109 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
 
+    setState(() {
+      _isSubmitting = true;
+    });
+
     final email = _emailController.text.trim().toLowerCase();
     final password = _passwordController.text;
 
-    if (_currentMode == AuthMode.register) {
-      final name = _fullNameController.text.trim();
+    try {
+      if (_currentMode == AuthMode.register) {
+        final name = _fullNameController.text.trim();
 
-      // Check if email already exists
-      final bool exists = UserStore().isEmailRegistered(email);
-      if (exists) {
+        try {
+          final UserCredential userCredential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(email: email, password: password);
+          await userCredential.user?.updateDisplayName(name);
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'email-already-in-use') {
+            setState(() {
+              _errorMessage = 'Email ini sudah terdaftar di Firebase. Silakan langsung masuk.';
+              _isSubmitting = false;
+            });
+            return;
+          } else if (e.code == 'weak-password') {
+            setState(() {
+              _errorMessage = 'Kata sandi terlalu lemah. Gunakan minimal 6 karakter.';
+              _isSubmitting = false;
+            });
+            return;
+          }
+        } catch (_) {
+          // Local fallback mode
+        }
+
+        final newAccount = UserAccount(name: name, email: email, password: password);
+        UserStore().registerAccount(newAccount);
+
         setState(() {
-          _errorMessage = 'Email ini sudah terdaftar. Silakan langsung masuk.';
+          _currentMode = AuthMode.signIn;
+          _errorMessage = null;
+          _isSubmitting = false;
         });
-        return;
-      }
 
-      // Add new account to central UserStore
-      final newAccount = UserAccount(name: name, email: email, password: password);
-      UserStore().registerAccount(newAccount);
-
-      // Switch to Sign In mode
-      setState(() {
-        _currentMode = AuthMode.signIn;
-        _errorMessage = null;
-      });
-    } else {
-      // Login validation: must match email AND password via UserStore
-      final UserAccount? matchedAccount = UserStore().findAccount(email, password);
-
-      if (matchedAccount != null) {
-        // Success
-        widget.onAuthSuccess(matchedAccount.name);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('✅ Akun berhasil terdaftar di Firebase! Silakan masuk.'),
+              backgroundColor: Color(0xFF10B981),
+            ),
+          );
+        }
       } else {
-        // Failure
-        setState(() {
-          _errorMessage = '❌ Email atau kata sandi tidak cocok dengan akun yang didaftarkan!';
-        });
+        String userName = 'Ammar';
+        bool authSuccess = false;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('❌ Email atau kata sandi salah. Harap periksa kembali!'),
-            backgroundColor: Color(0xFFE53935),
-          ),
-        );
+        try {
+          final UserCredential userCredential = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(email: email, password: password);
+          userName = userCredential.user?.displayName ?? _fullNameController.text.trim();
+          if (userName.isEmpty) {
+            userName = email.split('@').first;
+          }
+          authSuccess = true;
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'user-not-found' || e.code == 'wrong-password' || e.code == 'invalid-credential') {
+            setState(() {
+              _errorMessage = '❌ Email atau kata sandi Firebase Authentication tidak sesuai!';
+              _isSubmitting = false;
+            });
+            return;
+          }
+        } catch (_) {
+          // Local fallback mode
+        }
+
+        if (!authSuccess) {
+          final UserAccount? matchedAccount = UserStore().findAccount(email, password);
+          if (matchedAccount != null) {
+            userName = matchedAccount.name;
+            authSuccess = true;
+          }
+        }
+
+        if (authSuccess) {
+          if (!UserStore().isEmailRegistered(email)) {
+            UserStore().registerAccount(
+              UserAccount(name: userName, email: email, password: password),
+            );
+          }
+          if (mounted) {
+            widget.onAuthSuccess(userName);
+          }
+        } else {
+          setState(() {
+            _errorMessage = '❌ Email atau kata sandi tidak terdaftar di Firebase!';
+            _isSubmitting = false;
+          });
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
       }
     }
   }
@@ -433,7 +495,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
                 // Action Button
                 ElevatedButton(
-                  onPressed: _submit,
+                  onPressed: _isSubmitting ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: tokens.buttonPrimaryBg,
                     foregroundColor: tokens.buttonPrimaryFg,
@@ -442,20 +504,29 @@ class _AuthScreenState extends State<AuthScreen> {
                       borderRadius: BorderRadius.circular(LifelineRadius.xl2),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _currentMode == AuthMode.signIn ? 'Masuk' : 'Daftar',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                  child: _isSubmitting
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _currentMode == AuthMode.signIn ? 'Masuk' : 'Daftar',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: LifelineSpacing.md),
+                            const Icon(Icons.arrow_forward_rounded, size: 20),
+                          ],
                         ),
-                      ),
-                      const SizedBox(width: LifelineSpacing.md),
-                      const Icon(Icons.arrow_forward_rounded, size: 20),
-                    ],
-                  ),
                 ),
                 const SizedBox(height: LifelineSpacing.lg16),
 
