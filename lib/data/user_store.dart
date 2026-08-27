@@ -55,6 +55,7 @@ class UserStore {
     ),
   ];
 
+  String? _activeUserName;
   SharedPreferences? _prefs;
 
   Future<void> init() async {
@@ -64,6 +65,7 @@ class UserStore {
 
   void _loadFromDisk() {
     if (_prefs == null) return;
+    _activeUserName = _prefs!.getString('user_store_active_user_name');
 
     // Load registered accounts
     final String? accountsJson = _prefs!.getString('user_store_registered_accounts');
@@ -233,5 +235,21 @@ class UserStore {
     final k = _key(userName);
     _contactsMap[k] = contacts;
     _saveContacts();
+  }
+
+  String? get activeUserName => _activeUserName;
+
+  void setActiveUser(String userName) {
+    _activeUserName = userName;
+    if (_prefs != null) {
+      _prefs!.setString('user_store_active_user_name', userName);
+    }
+  }
+
+  void clearActiveUser() {
+    _activeUserName = null;
+    if (_prefs != null) {
+      _prefs!.remove('user_store_active_user_name');
+    }
   }
 }

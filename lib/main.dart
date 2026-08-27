@@ -32,9 +32,26 @@ class LifelineApp extends StatefulWidget {
 
 class _LifelineAppState extends State<LifelineApp> {
   ThemeMode _themeMode = ThemeMode.light;
-  String _currentRoute = 'welcome';
+  late String _currentRoute;
   AuthMode _authMode = AuthMode.signIn;
-  String _currentUserName = 'Ammar';
+  late String _currentUserName;
+
+  @override
+  void initState() {
+    super.initState();
+    final String? activeUser = UserStore().activeUserName;
+    if (activeUser != null && activeUser.isNotEmpty) {
+      _currentUserName = activeUser;
+      if (UserStore().hasCompletedOnboarding(activeUser)) {
+        _currentRoute = 'home';
+      } else {
+        _currentRoute = 'onboarding';
+      }
+    } else {
+      _currentUserName = 'Ammar';
+      _currentRoute = 'welcome';
+    }
+  }
 
   void _toggleTheme() {
     setState(() {
@@ -60,6 +77,7 @@ class _LifelineAppState extends State<LifelineApp> {
     setState(() {
       if (userName != null) {
         _currentUserName = userName;
+        UserStore().setActiveUser(userName);
       }
       
       if (UserStore().hasCompletedOnboarding(_currentUserName)) {
@@ -71,6 +89,7 @@ class _LifelineAppState extends State<LifelineApp> {
   }
 
   void _navigateToWelcome() {
+    UserStore().clearActiveUser();
     setState(() {
       _currentRoute = 'welcome';
     });
