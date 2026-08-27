@@ -227,58 +227,6 @@ class WelcomeScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class GoogleLogoPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final double width = size.width;
-    final double height = size.height;
-    final double strokeWidth = width * 0.22;
-    final Offset center = Offset(width / 2, height / 2);
-    final double radius = (width - strokeWidth) / 2;
-
-    final Paint redPaint = Paint()
-      ..color = const Color(0xFFEA4335)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-
-    final Paint yellowPaint = Paint()
-      ..color = const Color(0xFFFBBC05)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-
-    final Paint greenPaint = Paint()
-      ..color = const Color(0xFF34A853)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-
-    final Paint bluePaint = Paint()
-      ..color = const Color(0xFF4285F4)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-
-    final Rect rect = Rect.fromCircle(center: center, radius: radius);
-
-    canvas.drawArc(rect, -0.785, 2.356, false, redPaint);
-    canvas.drawArc(rect, 1.571, 1.178, false, yellowPaint);
-    canvas.drawArc(rect, 2.749, 1.571, false, greenPaint);
-    canvas.drawArc(rect, 0.0, 1.571, false, bluePaint);
-
-    final Paint barPaint = Paint()
-      ..color = const Color(0xFF4285F4)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRect(
-      Rect.fromLTRB(width * 0.48, height * 0.38, width * 0.95, height * 0.62),
-      barPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
   Widget _buildFeatureCard(
     BuildContext context, {
     required LifelineColors tokens,
@@ -340,4 +288,54 @@ class GoogleLogoPainter extends CustomPainter {
       ),
     );
   }
+}
+
+class GoogleLogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double width = size.width;
+    final double height = size.height;
+    final double strokeWidth = width * 0.22;
+    final Offset center = Offset(width / 2, height / 2);
+    final double radius = (width - strokeWidth) / 2;
+
+    final Paint redPaint = Paint()
+      ..color = const Color(0xFFEA4335)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    final Paint yellowPaint = Paint()
+      ..color = const Color(0xFFFBBC05)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    final Paint greenPaint = Paint()
+      ..color = const Color(0xFF34A853)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    final Paint bluePaint = Paint()
+      ..color = const Color(0xFF4285F4)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    final Rect rect = Rect.fromCircle(center: center, radius: radius);
+
+    canvas.drawArc(rect, -0.785, 2.356, false, redPaint);
+    canvas.drawArc(rect, 1.571, 1.178, false, yellowPaint);
+    canvas.drawArc(rect, 2.749, 1.571, false, greenPaint);
+    canvas.drawArc(rect, 0.0, 1.571, false, bluePaint);
+
+    final Paint barPaint = Paint()
+      ..color = const Color(0xFF4285F4)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRect(
+      Rect.fromLTRB(width * 0.48, height * 0.38, width * 0.95, height * 0.62),
+      barPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
