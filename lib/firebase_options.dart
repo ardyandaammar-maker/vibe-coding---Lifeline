@@ -44,22 +44,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDummyKeyForLifelineAppDemo12345',
-    appId: '1:123456789012:web:abcdef1234567890',
-    messagingSenderId: '123456789012',
+    apiKey: 'AIzaSyDUOyM-JkOfhJTIwa41N4YFJYBGXG9Uy2g',
+    appId: '1:633261118229:web:055f79513f2bdbcf174f1c',
+    messagingSenderId: '633261118229',
     projectId: 'lifeline-emergency-health',
     authDomain: 'lifeline-emergency-health.firebaseapp.com',
-    storageBucket: 'lifeline-emergency-health.appspot.com',
+    storageBucket: 'lifeline-emergency-health.firebasestorage.app',
+    measurementId: 'G-8QZPQN7DG0',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDummyKeyForLifelineAppDemo12345',
-    appId: '1:123456789012:android:abcdef1234567890',
-    messagingSenderId: '123456789012',
+    apiKey: 'AIzaSyDbImHJWdQDnMpJs2SLmdhX2cwLtgb3-t4',
+    appId: '1:633261118229:android:11db41f7294cbb07174f1c',
+    messagingSenderId: '633261118229',
     projectId: 'lifeline-emergency-health',
-    storageBucket: 'lifeline-emergency-health.appspot.com',
+    storageBucket: 'lifeline-emergency-health.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDummyKeyForLifelineAppDemo12345',
     appId: '1:123456789012:ios:abcdef1234567890',

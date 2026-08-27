@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "633261118229",
+    "project_id": "lifeline-emergency-health",
+    "storage_bucket": "lifeline-emergency-health.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633261118229:android:11db41f7294cbb07174f1c",
+        "android_client_info": {
+          "package_name": "com.example.lifeline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "633261118229-a2r8v6r2h86fjrmqe7nloe4ucd6b62i3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbImHJWdQDnMpJs2SLmdhX2cwLtgb3-t4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "633261118229-167jqdeab62tq0lnedbpr68s52hi88h4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "633261118229-sicfo2qp5m2aalp3gj07uved7kl0vuq8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.lifeline"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
