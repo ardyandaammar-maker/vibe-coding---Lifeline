@@ -465,8 +465,10 @@ class _AuthScreenState extends State<AuthScreen> {
                     Expanded(child: Divider(color: tokens.borderPrimary)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
-                      style: TextStyle(fontSize: 12, color: tokens.textTertiary),
-                      child: const Text('atau'),
+                      child: Text(
+                        'atau',
+                        style: TextStyle(fontSize: 12, color: tokens.textTertiary),
+                      ),
                     ),
                     Expanded(child: Divider(color: tokens.borderPrimary)),
                   ],
