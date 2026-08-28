@@ -93,6 +93,9 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     _currentMode = widget.initialMode;
+    _fullNameController.clear();
+    _emailController.clear();
+    _passwordController.clear();
   }
 
   @override
@@ -316,6 +319,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             setState(() {
                               _currentMode = AuthMode.signIn;
                               _errorMessage = null;
+                              _fullNameController.clear();
+                              _emailController.clear();
+                              _passwordController.clear();
                             });
                           },
                           child: AnimatedContainer(
@@ -358,6 +364,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             setState(() {
                               _currentMode = AuthMode.register;
                               _errorMessage = null;
+                              _fullNameController.clear();
+                              _emailController.clear();
+                              _passwordController.clear();
                             });
                           },
                           child: AnimatedContainer(
