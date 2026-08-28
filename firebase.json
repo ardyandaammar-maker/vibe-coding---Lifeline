@@ -1,1 +1,36 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"lifeline-emergency-health","appId":"1:633261118229:android:11db41f7294cbb07174f1c","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"lifeline-emergency-health","configurations":{"android":"1:633261118229:android:11db41f7294cbb07174f1c","web":"1:633261118229:web:055f79513f2bdbcf174f1c"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "lifeline-emergency-health",
+          "appId": "1:633261118229:android:11db41f7294cbb07174f1c",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "lifeline-emergency-health",
+          "configurations": {
+            "android": "1:633261118229:android:11db41f7294cbb07174f1c",
+            "web": "1:633261118229:web:055f79513f2bdbcf174f1c"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
