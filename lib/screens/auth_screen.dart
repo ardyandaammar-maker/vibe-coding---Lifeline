@@ -93,9 +93,6 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     _currentMode = widget.initialMode;
-    // Set default sample credentials in input fields for easy testing
-    _emailController.text = 'ammar@lifeline.id';
-    _passwordController.text = 'secret123';
   }
 
   @override
